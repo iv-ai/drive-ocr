@@ -4,11 +4,12 @@ A tool to process receipt images from Google Drive or local storage, perform OCR
 
 ## Features
 
-- Download images from Google Drive folder
+- Download images from Google Drive folder and all its subfolders
 - Automatic image enhancement for OCR
 - Tesseract OCR integration
 - Skip already processed files
 - CSV export capability
+- Support for unlimited number of images
 - Two versions available:
   - Command-line script
   - Interactive Jupyter Notebook
@@ -89,21 +90,21 @@ A tool to process receipt images from Google Drive or local storage, perform OCR
 ### Script Version
 
 ```bash
-# Process Google Drive folder
-python ocr_processor.py --folder-id <FOLDER_ID> --credentials credentials.json
+# Process Google Drive folder (including all subfolders)
+python ocr_processor.py --folder-url "https://drive.google.com/drive/folders/your-folder-id" --credentials credentials.json
 
 # Process local images
 python ocr_processor.py --local
 
 # Force reprocess all files
-python ocr_processor.py --folder-id <FOLDER_ID> --force
+python ocr_processor.py --folder-url "https://drive.google.com/drive/folders/your-folder-id" --force
 
 # Export to CSV
 python ocr_processor.py --export-csv transcripts.csv
 ```
 
 **Options**:
-- `--folder-id`: Google Drive folder ID
+- `--folder-url`: Google Drive folder URL or ID (supports both formats)
 - `--credentials`: Path to service account JSON
 - `--local`: Process local files in `downloaded_images`
 - `--force`: Reprocess existing files
@@ -112,11 +113,11 @@ python ocr_processor.py --export-csv transcripts.csv
 ### Notebook Version
 
 1. Open `OCR_Processor.ipynb`
-2. Configure these variables in **Section 6**:
+2. Configure these variables in **Section 5**:
    ```python
    MODE = 'drive'  # 'drive' | 'local' | 'export'
    FORCE_REPROCESS = False
-   GOOGLE_FOLDER_ID = 'your-folder-id'
+   GOOGLE_FOLDER_URL = 'https://drive.google.com/drive/folders/your-folder-id'  # Could be url or just folder id
    CREDENTIALS_FILE = 'credentials.json'
    CSV_OUTPUT_FILE = 'transcripts.csv'
    ```
@@ -141,7 +142,7 @@ Both versions create CSV files with:
 - `Permission denied`: Verify folder sharing with service account
 - `TesseractNotFoundError`: Check Tesseract installation and PATH
 - `Missing credentials`: Ensure JSON file is in project root
-- `File not found`: Verify folder ID and file extensions
+- `File not found`: Verify folder URL and file extensions
 
 **Clean Start**:
 ```bash
